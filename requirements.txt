@@ -1,0 +1,7 @@
+numpy>=1.26
+matplotlib>=3.8
+soundfile>=0.12
+sounddevice>=0.5
+catap>=0.6.0; sys_platform == "darwin"
+PyAudioWPatch>=0.2.12.9; sys_platform == "win32"
+SoundCard>=0.4.6; sys_platform == "linux"

@@ -1,0 +1,58 @@
+name: Build standalone binaries
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-latest
+            artifact: AudioAnalyzer-Windows-x64
+          - runner: ubuntu-24.04
+            artifact: AudioAnalyzer-Linux-x64
+          - runner: macos-15
+            artifact: AudioAnalyzer-macOS-arm64
+          - runner: macos-15-intel
+            artifact: AudioAnalyzer-macOS-x64
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install Linux runtime/build libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libportaudio2 portaudio19-dev libpulse0 libpulse-dev python3-tk
+
+      - name: Install package and build tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install . pytest pyinstaller pyinstaller-hooks-contrib
+
+      - name: Build standalone release
+        run: python packaging/build_binary.py
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}
+          path: release/*
+          if-no-files-found: error

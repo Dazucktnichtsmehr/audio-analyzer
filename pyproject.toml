@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audio-analyzer-cli"
+version = "1.2.0"
+description = "CLI audio spectrum analyzer with FFT, STFT, live input, PA RTA and cross-platform system-audio capture"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    "soundfile>=0.12",
+    "sounddevice>=0.5",
+    "catap>=0.6.0; sys_platform == 'darwin'",
+    "PyAudioWPatch>=0.2.12.9; sys_platform == 'win32'",
+    "SoundCard>=0.4.6; sys_platform == 'linux'",
+]
+
+[project.scripts]
+audio-analyzer = "audio_analyzer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
