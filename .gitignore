@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+build/
+dist/
+dist-binary/
+build-pyinstaller/
+build-spec/
+release/
+*.egg-info/
+.DS_Store

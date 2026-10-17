@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "audio-analyzer-cli"
-version = "1.2.0"
+version = "1.3.0"
 description = "CLI audio spectrum analyzer with FFT, STFT, live input, PA RTA and cross-platform system-audio capture"
 readme = "README.md"
 requires-python = ">=3.11"

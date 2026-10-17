@@ -1,4 +1,4 @@
-# Audio Analyzer 1.2
+# Audio Analyzer 1.3
 
 Kommandozeilen-Audioanalyse mit grafischer Darstellung.
 
@@ -31,6 +31,8 @@ Unter Linux wird für Systemaudio PulseAudio oder die übliche PulseAudio-Kompat
 ## Standalone-Version ohne Python
 
 Neben der Python-/pipx-Installation kann Audio Analyzer mit PyInstaller als eigenständige Programmdatei gebaut werden. Auf dem Zielrechner ist dann kein Python erforderlich.
+
+Wird das Programm ohne Kommandozeilenargumente gestartet (z. B. per Doppelklick auf `audio-analyzer.exe` unter Windows), öffnet sich ein interaktives Startmenü. Die bisherigen CLI-Befehle bleiben unverändert verfügbar.
 
 - Windows: `audio-analyzer.exe`
 - macOS: eigenständiges `audio-analyzer`-Executable für Terminal/CLI

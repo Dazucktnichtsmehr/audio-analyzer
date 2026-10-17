@@ -19,15 +19,15 @@ Danach liegt unter `release/` ein Archiv für die aktuelle Plattform.
 
 ### Ausgaben
 
-- Windows: `AudioAnalyzer-1.2.0-windows-x64.zip` mit `audio-analyzer.exe`
-- macOS: `AudioAnalyzer-1.2.0-macos-arm64.tar.gz` bzw. `...-x64.tar.gz`
-- Linux: `AudioAnalyzer-1.2.0-linux-x64.tar.gz`
+- Windows: `AudioAnalyzer-1.3.0-windows-x64.zip` mit `audio-analyzer.exe`
+- macOS: `AudioAnalyzer-1.3.0-macos-arm64.tar.gz` bzw. `...-x64.tar.gz`
+- Linux: `AudioAnalyzer-1.3.0-linux-x64.tar.gz`
 
 Die Architektur im Dateinamen wird automatisch aus dem Build-Rechner ermittelt.
 
 ## Alle Plattformen automatisch mit GitHub Actions bauen
 
-Die Datei `.github/workflows/build-binaries.yml` baut bei manuellem Start oder bei einem Git-Tag wie `v1.2.0` automatisch:
+Die Datei `.github/workflows/build-binaries.yml` baut bei manuellem Start oder bei einem Git-Tag wie `v1.3.0` automatisch:
 
 - Windows x64
 - Linux x64

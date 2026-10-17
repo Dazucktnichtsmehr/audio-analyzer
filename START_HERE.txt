@@ -1,0 +1,21 @@
+Audio Analyzer 1.3.0
+====================
+
+Neu in 1.3.0:
+- Start ohne Argumente / Doppelklick öffnet ein interaktives Menü.
+- Die bisherigen CLI-Befehle funktionieren weiterhin unverändert.
+
+Nach dem Push zu GitHub:
+1. Repository -> Actions
+2. "Build standalone binaries"
+3. "Run workflow" auf main
+4. Die vier fertigen Artifacts herunterladen.
+
+Windows-Endnutzer:
+- ZIP entpacken
+- audio-analyzer.exe doppelklicken
+- Modus im Menü auswählen
+
+CLI bleibt möglich, z. B.:
+  audio-analyzer.exe --system-audio
+  audio-analyzer.exe --measure

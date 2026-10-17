@@ -88,11 +88,14 @@ def pyinstaller_args() -> list[str]:
 def write_binary_readme(folder: Path) -> None:
     system = platform_name()
     lines = [
-        "Audio Analyzer 1.2.0",
+        "Audio Analyzer 1.3.0",
         "====================",
         "",
         "Dieses Release enthält eine eigenständige Programmdatei.",
         "Python muss auf dem Zielrechner nicht installiert sein.",
+        "",
+        "Ohne Argumente gestartet (z. B. per Doppelklick) öffnet sich ein Startmenü.",
+        "Die Kommandozeilenoptionen funktionieren weiterhin wie gewohnt.",
         "",
         "Beispiele:",
         "  audio-analyzer --help",
@@ -134,7 +137,7 @@ def build_archive(binary: Path) -> Path:
     RELEASE_DIR.mkdir(parents=True, exist_ok=True)
     system = platform_name()
     arch = normalized_arch()
-    stem = f"AudioAnalyzer-1.2.0-{system}-{arch}"
+    stem = f"AudioAnalyzer-1.3.0-{system}-{arch}"
     staging = RELEASE_DIR / stem
     if staging.exists():
         shutil.rmtree(staging)

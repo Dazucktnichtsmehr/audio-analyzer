@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 from . import __version__
@@ -24,7 +25,7 @@ from .realtime import list_input_devices, run_live_mode
 from .system_audio import list_system_audio_devices, run_system_audio_mode
 
 
-def parse_arguments(argv: list[str] | None = None) -> argparse.Namespace:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="audio-analyzer",
         description=(
@@ -119,7 +120,11 @@ def parse_arguments(argv: list[str] | None = None) -> argparse.Namespace:
         default="auto",
         help="Datei-Decoder",
     )
-    return parser.parse_args(argv)
+    return parser
+
+
+def parse_arguments(argv: list[str] | None = None) -> argparse.Namespace:
+    return build_parser().parse_args(argv)
 
 
 def ask_for_file() -> Path:
@@ -213,10 +218,7 @@ def _validate_args(args: argparse.Namespace) -> None:
         raise ValueError("--system-device gehört zu --system-audio.")
 
 
-def main(argv: list[str] | None = None) -> None:
-    args = parse_arguments(argv)
-    _validate_args(args)
-
+def _dispatch(args: argparse.Namespace) -> None:
     if args.list_devices:
         list_input_devices()
         return
@@ -274,3 +276,94 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     run_file_mode(args)
+
+
+def _run_argv(argv: list[str]) -> None:
+    args = parse_arguments(argv)
+    _validate_args(args)
+    _dispatch(args)
+
+
+def _ask_menu_file() -> str | None:
+    raw = input("Pfad zur Audiodatei (leer = zurück): ").strip().strip('"').strip("'")
+    return raw or None
+
+
+def run_interactive_menu() -> None:
+    """Interactive launcher used when the program is started without CLI arguments."""
+    menu = f"""
+Audio Analyzer {__version__}
+{'=' * (15 + len(__version__))}
+
+[1] Audiodatei analysieren (FFT)
+[2] Spektrogramm einer Audiodatei
+[3] Live-Audio / Mikrofon / Audiointerface
+[4] System-Audio analysieren
+[5] PA-Einmessmodus
+[6] Audio-Eingabegeräte anzeigen
+[7] System-Audio-Geräte anzeigen
+[8] Kommandozeilen-Hilfe
+[0] Beenden
+"""
+
+    commands = {
+        "3": ["--live"],
+        "4": ["--system-audio"],
+        "5": ["--measure"],
+        "6": ["--list-devices"],
+        "7": ["--list-system-devices"],
+    }
+
+    while True:
+        print(menu)
+        try:
+            choice = input("Auswahl: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nBeendet.")
+            return
+
+        if choice == "0":
+            return
+
+        if choice == "8":
+            print()
+            build_parser().print_help()
+            continue
+
+        if choice in ("1", "2"):
+            try:
+                path = _ask_menu_file()
+            except (EOFError, KeyboardInterrupt):
+                print("\nZurück zum Menü.")
+                continue
+            if path is None:
+                continue
+            command = ["--", path] if choice == "1" else ["--spectrogram", "--", path]
+        else:
+            command = commands.get(choice)
+            if command is None:
+                print("\nUngültige Auswahl. Bitte 0 bis 8 eingeben.")
+                continue
+
+        try:
+            _run_argv(command)
+        except KeyboardInterrupt:
+            print("\nVorgang abgebrochen.")
+        except Exception as exc:
+            # Im Doppelklick-Modus soll ein Fehler sichtbar bleiben und nicht sofort
+            # zusammen mit dem Konsolenfenster verschwinden.
+            print(f"\nFehler: {exc}")
+
+
+def main(argv: list[str] | None = None) -> None:
+    effective_argv = sys.argv[1:] if argv is None else list(argv)
+
+    if not effective_argv:
+        if sys.stdin.isatty():
+            run_interactive_menu()
+        else:
+            # In Pipes/CI nicht auf Benutzereingabe warten.
+            build_parser().print_help()
+        return
+
+    _run_argv(effective_argv)
